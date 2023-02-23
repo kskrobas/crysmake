@@ -107,11 +107,7 @@ size_t i;
                         db.grainprm.minZ=minZ;
                         db.grainprm.maxZ=maxZ;
 
-                        if(verbose){/*
-                            cout<<"::: *\tmin\tmax"<<endl;
-                            cout<<"::: X\t"<<minX<<"\t"<<maxX<<endl;
-                            cout<<"::: Y\t"<<minY<<"\t"<<maxY<<endl;
-                            cout<<"::: Z\t"<<minZ<<"\t"<<maxZ<<endl;*/
+                        if(verbose){
 
                             cout<<"::: "<<setw(2)<<std::right<<"*"<<setw(10)<<std::right<<"min"<<setw(10)<<std::right<<"max"<<endl;
                             cout<<"::: "<<setw(2)<<std::right<<"X"<<setw(10)<<std::right<<minX<<setw(10)<<std::right<<maxX<<endl;
