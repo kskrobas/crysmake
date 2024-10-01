@@ -9,6 +9,7 @@ DISTNAME      = crysmake1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
 LIBS          = $(SUBLIBS) -L/usr/lib64 -lgomp  -lpthread
+objdir=objrel
 
 ####### Output directory
 
@@ -30,18 +31,6 @@ OBJECTS       = main.o \
 		stndlstgrain.o \
 		elements.o \
 		hcpgrain.o
-DIST          = skrypt.cm \
-		crysmake.pro clcmdlist.h \
-		databuffer.h \
-		iofile.h \
-		stndlstgrain.h \
-		elements.h main.cpp \
-		clcmdlist.cpp \
-		databuffer.cpp \
-		iofile.cpp \
-		stndlstgrain.cpp \
-		elements.cpp \
-		hcpgrain.cpp
 TARGET        = crysmake
 
 
@@ -51,11 +40,18 @@ first: all
 crysmake:  $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
-all: crysmake
+all: dirs crysmake
 
-dist: distdir FORCE
-	(cd `dirname $(DISTDIR)` && $(TAR) $(DISTNAME).tar $(DISTNAME) && $(COMPRESS) $(DISTNAME).tar) && $(MOVE) `dirname $(DISTDIR)`/$(DISTNAME).tar.gz . && $(DEL_FILE) -r $(DISTDIR)
 
+dirs: $(objdir) $(bindir)
+	@echo
+	@echo -n -e "\e[30;44m COMPILATION ....       \033[0m"
+	@echo
+
+
+$(objdir):
+	@echo "create objrel directory"
+	mkdir -p $(objdir)
 
 
 clean: compiler_clean 

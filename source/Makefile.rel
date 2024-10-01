@@ -1,0 +1,109 @@
+
+
+CXX           = g++
+DEFINES       =
+CFLAGS        = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -O2 -std=c++17  -fPIC
+INCPATH       = -I.
+LINK          = g++
+LFLAGS        = -Wl,-O1
+LIBS          = -L/usr/lib64 -lgomp  -lpthread
+objdir=objrel
+bindir=../bin
+
+####### Files
+
+SOURCES       = main.cpp \
+		clcmdlist.cpp \
+		databuffer.cpp \
+		iofile.cpp \
+		stndlstgrain.cpp \
+		elements.cpp \
+		hcpgrain.cpp 
+OBJECTS       = $(objdir)/main.o \
+		$(objdir)/clcmdlist.o \
+		$(objdir)/databuffer.o \
+		$(objdir)/iofile.o \
+		$(objdir)/stndlstgrain.o \
+		$(objdir)/elements.o \
+		$(objdir)/hcpgrain.o
+TARGET        = crysmake
+
+
+.PHONY: all clean install  sysinstall
+
+
+all: dirs crysmake
+
+
+crysmake:  $(OBJECTS)
+	$(LINK) $(LFLAGS) -o $(bindir)/$(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
+	@if [ $$? -eq 0 ]; then  echo " "; echo -n -e "\e[30;42m SUCCESSFUL compilation \033[0m" ; else echo " "; echo "\e[30;41m ERROR(S) detected\033[0m"; fi;
+	@echo
+	@echo
+
+
+dirs: $(objdir) $(bindir)
+	@echo
+	@echo -n -e "\e[30;44m COMPILATION ....       \033[0m"
+	@echo
+
+
+$(objdir):
+	@echo "create objrel directory"
+	mkdir -p $(objdir)
+
+$(bindir):
+	@echo "create bindir directory"
+	mkdir -p $(bindir)
+
+
+clean:
+	rm -f $(bindir)/$(TARGET) $(objdir)/*
+
+
+####### Compile
+
+$(objdir)/main.o: main.cpp clcmdlist.h \
+		iofile.h \
+		databuffer.h \
+		stndlstgrain.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(objdir)/main.o main.cpp
+
+$(objdir)/clcmdlist.o: clcmdlist.cpp clcmdlist.h \
+		iofile.h \
+		databuffer.h \
+		stndlstgrain.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(objdir)/clcmdlist.o clcmdlist.cpp
+
+$(objdir)/databuffer.o: databuffer.cpp databuffer.h \
+		stndlstgrain.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(objdir)/databuffer.o databuffer.cpp
+
+$(objdir)/iofile.o: iofile.cpp iofile.h \
+		databuffer.h \
+		stndlstgrain.h \
+		elements.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(objdir)/iofile.o iofile.cpp
+
+$(objdir)/stndlstgrain.o: stndlstgrain.cpp stndlstgrain.h \
+		elements.h \
+		clcmdlist.h \
+		iofile.h \
+		databuffer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(objdir)/stndlstgrain.o stndlstgrain.cpp
+
+$(objdir)/elements.o: elements.cpp elements.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(objdir)/elements.o elements.cpp
+
+$(objdir)/hcpgrain.o: hcpgrain.cpp hcpgrain.h \
+		databuffer.h \
+		stndlstgrain.h \
+		clcmdlist.h \
+		iofile.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(objdir)/hcpgrain.o hcpgrain.cpp
+
+####### Install
+
+install:
+
